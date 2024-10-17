@@ -1,0 +1,33 @@
+<swiper-container
+  #swiper
+  effect="flip"
+  [modules]="swiperModules"
+  [slidesPerView]="1"
+  [pager]="true"
+  (swiperslidechange)="onSlideChange()"
+>
+  <swiper-slide class="topRight">
+    <img src="assets/imgs/screen1.png" alt="screen1" />
+  </swiper-slide>
+  <swiper-slide class="topRight">
+    <img src="assets/imgs/screen2.png" alt="screen2" />
+  </swiper-slide>
+  <swiper-slide class="topRight">
+    <img src="assets/imgs/screen3.png" alt="screen3" />
+  </swiper-slide>
+</swiper-container>
+@if(slideIndex<2){
+<ion-button fill="clear" color="light" class="skipButton" (click)="skip()"
+  >Skip</ion-button
+>
+} @else{
+<ion-button
+  shape="round"
+  fill="outline"
+  color="primary"
+  (click)="goToLogin()"
+  class="loginButton"
+>
+  <ion-text color="light">Let's start</ion-text>
+</ion-button>
+}
