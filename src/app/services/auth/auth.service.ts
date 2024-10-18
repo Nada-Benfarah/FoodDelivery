@@ -20,7 +20,7 @@ export class AuthService {
     private storage: StorageService
   ) {}
 
-  async register(formValue:any) {
+  async register(formValue: any) {
     try {
       const registeredUser = await createUserWithEmailAndPassword(
         this._fireAuth,
@@ -30,7 +30,11 @@ export class AuthService {
       console.log('registered user: ', registeredUser);
       const uid = registeredUser.user.uid;
       const dataRef = doc(this._firestore, `users/${uid}`);
-      setDoc(dataRef, formValue);
+      const data = {
+        email: formValue.email,
+        username: formValue.username,
+      };
+      setDoc(dataRef, data);
       await this.storage.setItem(user_key, uid);
       return uid;
     } catch (e) {
@@ -38,7 +42,7 @@ export class AuthService {
     }
   }
 
-  async login(formValue:any) {
+  async login(formValue: any) {
     try {
       const response = await signInWithEmailAndPassword(
         this._fireAuth,

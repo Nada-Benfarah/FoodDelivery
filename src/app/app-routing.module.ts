@@ -6,7 +6,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth-screen',
+    redirectTo: 'tabs',
     pathMatch: 'full',
   },
   {
