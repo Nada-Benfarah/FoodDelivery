@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({
   selector: 'app-sign-in',
@@ -23,6 +30,10 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  customCounterFormatter(inputLength: number, maxLength: number) {
+    return `${maxLength - inputLength} characters remaining`;
+  }
 
   initForm() {
     this.form = new FormGroup({
@@ -46,21 +57,25 @@ export class SignInComponent implements OnInit {
     this.authService
       .login(this.form.value)
       .then((data) => {
+        console.log(data);
         this.router.navigateByUrl('/tabs', { replaceUrl: true });
         this.isLoading = false;
         this.form.reset();
       })
       .catch((e) => {
+        console.log(e);
         this.isLoading = false;
         let msg = 'Could not sign you in, please try again';
-        if (e.code == 'auth/invalid-credential') {
-          msg = 'Email or Password is incorrect';
+        if (e.code == 'auth/user-not-found') {
+          msg = 'Email Id could not be found';
+        } else if (e.code == 'auth/wrong-password') {
+          msg = 'Please enter correct password';
         }
         this.showAlert(msg);
       });
   }
 
-  async showAlert(message: string) {
+  async showAlert(message: any) {
     const alert = await this.alertController.create({
       header: 'Authentication Failed',
       message,
@@ -69,4 +84,6 @@ export class SignInComponent implements OnInit {
 
     await alert.present();
   }
+
+  reset(event: any) {}
 }

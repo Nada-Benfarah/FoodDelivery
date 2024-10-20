@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -9,6 +9,7 @@ import { AuthScreenPageRoutingModule } from './auth-screen-routing.module';
 import { AuthScreenPage } from './auth-screen.page';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,13 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     ReactiveFormsModule,
     IonicModule,
     AuthScreenPageRoutingModule,
+    FormsModule,
   ],
-  declarations: [AuthScreenPage, SignInComponent, SignUpComponent],
+  declarations: [
+    AuthScreenPage,
+    SignInComponent,
+    SignUpComponent,
+    ResetPasswordComponent,
+  ],
 })
 export class AuthScreenPageModule {}
