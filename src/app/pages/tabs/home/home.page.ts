@@ -7,6 +7,8 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { PopoverComponent } from './popover/popover.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { register } from 'swiper/element/bundle';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 register();
 // import Swiper core and required modules
@@ -33,7 +35,9 @@ export class HomePage implements OnInit, AfterContentChecked {
 
   constructor(
     public popoverController: PopoverController,
-    private api: ApiService
+    private api: ApiService,
+    private authService: AuthService,
+    private route: Router
   ) {}
 
   ngOnInit() {
@@ -118,6 +122,15 @@ export class HomePage implements OnInit, AfterContentChecked {
       else this.loc = 'Petite Ariana, Tunisia';
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async logout() {
+    try {
+      await this.authService.logout();
+      this.route.navigateByUrl('/auth-screen', { replaceUrl: true });
+    } catch {
+      console.log('Could not logout');
     }
   }
 }
