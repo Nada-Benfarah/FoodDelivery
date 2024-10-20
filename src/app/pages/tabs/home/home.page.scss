@@ -58,3 +58,29 @@ ion-content {
     }
   }
 }
+
+swiper-container {
+  flex: 1;
+  width: 100%;
+  height: fit-content;
+
+  &.categries {
+    swiper-slide {
+      width: fit-content !important;
+    }
+  }
+
+  &.favorites {
+    swiper-slide {
+      width: 90% !important;
+    }
+  }
+
+  swiper-slide {
+    width: 100%;
+  }
+
+  .swiper-pagination {
+    bottom: 10px;
+  }
+}

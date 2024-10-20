@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
+import { PopoverComponent } from './popover/popover.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { HomePage } from './home.page';
     HomePageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [HomePage],
+  declarations: [HomePage, PopoverComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePageModule {}

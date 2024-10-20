@@ -13,34 +13,39 @@
 <ion-content color="light">
   <ion-row>
     <swiper-container
-      [slidesPerView]="bannerConfig.slidesPerView"
-      [spaceBetween]="bannerConfig.spaceBetween"
-      [centeredSlides]="bannerConfig.centeredSlides"
-      [initialSlide]="bannerConfig.initialSlide"
-      [autoplay]="bannerConfig.autoplay"
-      [pagination]="bannerConfig.pagination"
-      class="banners"
+      style="height: fit-content"
+      [loop]="true"
+      [pagination]="true"
+      [navigation]="true"
+      autoplay="true"
     >
-      <swiper-slide swiperSlide *ngFor="let banner of banners">
-        <img [src]="banner?.banner" style="object-fit: contain" />
+      @for (item of banners; track $index) {
+      <swiper-slide>
+        <img
+          [style]="{width: '100%', height: '200px', objectFit: 'cover'}"
+          [src]="item?.banner"
+        />
       </swiper-slide>
+      }
     </swiper-container>
   </ion-row>
-
-  <ion-row class="ion-text-center category" *ngIf="categories.length > 0">
-    <swiper-container [config]="categoryConfig">
-      <swiper-slide swiperSlide *ngFor="let category of categories">
-        <div align="center">
-          <ion-avatar slot="start">
-            <img [src]="category?.image" />
-          </ion-avatar>
-        </div>
-        <ion-label class="ion-text-wrap">{{category?.name}}</ion-label>
-      </swiper-slide>
-    </swiper-container>
-  </ion-row>
-
-  <ion-row *ngIf="favorites.length > 0">
+  @if(categories.length > 0){
+  <swiper-container [slidesPerView]="4" class="categries">
+    @for (item of categories; track $index) {
+    <swiper-slide>
+      <div
+        [style]="{width: '25vw', height: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '20px 0'}"
+      >
+        <ion-avatar slot="start">
+          <img [src]="item?.image" />
+        </ion-avatar>
+        <ion-label class="ion-text-wrap">{{item?.name}}</ion-label>
+      </div>
+    </swiper-slide>
+    }
+  </swiper-container>
+  } @if(favorites.length > 0){
+  <ion-row>
     <ion-col size="8">
       <ion-label class="ion-margin-start heading"> Your favorites </ion-label>
     </ion-col>
@@ -54,16 +59,21 @@
         ></ion-icon>
       </ion-button>
     </ion-col>
-    <swiper-container [config]="restaurantConfig">
-      <swiper-slide swiperSlide *ngFor="let favorite of favorites">
+    <swiper-container class="favorites" [slidesPerView]="1.1">
+      @for (item of favorites; track $index) {
+      <swiper-slide>
         <ion-card>
-          <app-restaurant [restaurant]="favorite"></app-restaurant>
+          <app-restaurant
+            [restaurant]="item"
+            [routerLink]="['/', 'tabs', 'restaurants', item?.id]"
+          ></app-restaurant>
         </ion-card>
       </swiper-slide>
+      }
     </swiper-container>
   </ion-row>
-
-  <ion-row *ngIf="offers.length > 0">
+  } @if(offers.length > 0){
+  <ion-row>
     <ion-col size="8">
       <ion-label class="ion-margin-start heading"> Top offers </ion-label>
     </ion-col>
@@ -77,15 +87,20 @@
         ></ion-icon>
       </ion-button>
     </ion-col>
-    <swiper-container [config]="restaurantConfig">
-      <swiper-slide swiperSlide *ngFor="let offer of offers">
+    <swiper-container class="favorites" [slidesPerView]="1.1">
+      @for (item of offers; track $index) {
+      <swiper-slide>
         <ion-card>
-          <app-restaurant [restaurant]="offer"></app-restaurant>
+          <app-restaurant
+            [restaurant]="item"
+            [routerLink]="['/', 'tabs', 'restaurants', item?.id]"
+          ></app-restaurant>
         </ion-card>
       </swiper-slide>
+      }
     </swiper-container>
   </ion-row>
-
+  } @if(nearby.length > 0){
   <ion-list *ngIf="nearby.length > 0">
     <ion-row>
       <ion-col size="8">
@@ -104,8 +119,14 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    <ion-item-group *ngFor="let item of nearby">
-      <app-restaurant [restaurant]="item"></app-restaurant>
+    @for (item of nearby; track $index) {
+    <ion-item-group>
+      <app-restaurant
+        [restaurant]="item"
+        [routerLink]="['/', 'tabs', 'restaurants', item?.id]"
+      ></app-restaurant>
     </ion-item-group>
+    }
   </ion-list>
+  }
 </ion-content>

@@ -1,5 +1,18 @@
 import { AfterContentChecked, Component, OnInit } from '@angular/core';
+import { Geolocation } from '@capacitor/geolocation';
+import { PopoverController } from '@ionic/angular';
 import { SwiperOptions } from 'swiper/types';
+import SwiperCore from 'swiper';
+import { Autoplay, Pagination } from 'swiper/modules';
+import { PopoverComponent } from './popover/popover.component';
+import { ApiService } from 'src/app/services/api/api.service';
+import { register } from 'swiper/element/bundle';
+
+register();
+// import Swiper core and required modules
+
+// install Swiper modules
+SwiperCore.use([Autoplay, Pagination]);
 
 @Component({
   selector: 'app-home',
@@ -7,6 +20,7 @@ import { SwiperOptions } from 'swiper/types';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit, AfterContentChecked {
+  colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink'];
   loc = 'Locating...';
   banners: any[] = [];
   categories: any[] = [];
@@ -17,7 +31,10 @@ export class HomePage implements OnInit, AfterContentChecked {
   categoryConfig!: SwiperOptions;
   restaurantConfig!: SwiperOptions;
 
-  constructor() {}
+  constructor(
+    public popoverController: PopoverController,
+    private api: ApiService
+  ) {}
 
   ngOnInit() {
     this.banners = [
@@ -25,115 +42,12 @@ export class HomePage implements OnInit, AfterContentChecked {
       { banner: 'assets/dishes/3.jpg' },
       { banner: 'assets/dishes/cab.jpg' },
     ];
-    this.categories = [
-      { id: 1, name: 'North Indian', image: 'assets/dishes/nan.jpg' },
-      { id: 2, name: 'Italian', image: 'assets/dishes/pasta.jpg' },
-      { id: 3, name: 'Chowmein', image: 'assets/dishes/chowmein.jpg' },
-      { id: 4, name: 'South Indian', image: 'assets/dishes/dosa.jpg' },
-      { id: 5, name: 'Mexican', image: 'assets/dishes/dol.jpg' },
-    ];
-    this.favorites = [
-      {
-        id: '1',
-        cover: 'assets/dishes/restaurant.jpg',
-        name: 'Stayfit',
-        cuisines: ['Indian', 'Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-        latitude: 0,
-        longitude: 0,
-      },
-      {
-        id: '2',
-        cover: 'assets/dishes/2.jpg',
-        name: 'Stayfit1',
-        cuisines: ['Italian', 'Mexican', 'Chinese'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-      {
-        id: '3',
-        cover: 'assets/dishes/3.jpg',
-        name: 'Kolkata Roll',
-        cuisines: ['Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-    ];
-    this.offers = [
-      {
-        id: '1',
-        cover: 'assets/dishes/3.jpg',
-        name: 'Kolkata Roll',
-        cuisines: ['Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-      {
-        id: '2',
-        cover: 'assets/dishes/2.jpg',
-        name: 'Stayfit1',
-        cuisines: ['Italian', 'Mexican', 'Chinese'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-      {
-        id: '3',
-        cover: 'assets/dishes/restaurant.jpg',
-        name: 'Stayfit',
-        cuisines: ['Indian', 'Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-        latitude: 0,
-        longitude: 0,
-      },
-    ];
-    this.nearby = [
-      {
-        id: '1',
-        cover: 'assets/dishes/restaurant.jpg',
-        name: 'Stayfit',
-        cuisines: ['Indian', 'Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-        latitude: 0,
-        longitude: 0,
-      },
-      {
-        id: '2',
-        cover: 'assets/dishes/2.jpg',
-        name: 'Stayfit1',
-        cuisines: ['Italian', 'Mexican', 'Chinese'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-      {
-        id: '3',
-        cover: 'assets/dishes/3.jpg',
-        name: 'Kolkata Roll',
-        cuisines: ['Italian', 'Mexican'],
-        rating: 5,
-        delivery_time: 25,
-        distance: 2.5,
-        price: 100,
-      },
-    ];
+    this.categories = this.api.categories;
+    this.favorites = this.api.allRestaurants;
+    const offers = [...this.api.allRestaurants];
+    this.offers = offers.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+    this.nearby = this.api.allRestaurants;
+    this.getCurrentLocation();
   }
 
   ngAfterContentChecked() {
@@ -153,5 +67,57 @@ export class HomePage implements OnInit, AfterContentChecked {
     this.restaurantConfig = {
       slidesPerView: 1.1,
     };
+  }
+
+  async getCurrentLocation() {
+    try {
+      const coordinates = await Geolocation.getCurrentPosition();
+      console.log('Current position:', coordinates);
+    } catch (e) {
+      console.log(e);
+      this.openPopover();
+    }
+  }
+
+  openPopover() {
+    const ev = {
+      target: {
+        getBoundingClientRect: () => {
+          return {
+            left: 5,
+          };
+        },
+      },
+    };
+    this.presentPopover(ev);
+  }
+
+  async presentPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      cssClass: 'custom-popover',
+      event: ev,
+      translucent: true,
+    });
+    await popover.present();
+
+    const { data } = await popover.onDidDismiss();
+    console.log('onDidDismiss resolved with data', data);
+    if (data) {
+      this.requestGeolocationPermission();
+    } else {
+      this.loc = 'Karol Bagh, Delhi';
+    }
+  }
+
+  async requestGeolocationPermission() {
+    try {
+      const status = await Geolocation.requestPermissions();
+      console.log(status);
+      if (status?.location == 'granted') this.getCurrentLocation();
+      else this.loc = 'Petite Ariana, Tunisia';
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
