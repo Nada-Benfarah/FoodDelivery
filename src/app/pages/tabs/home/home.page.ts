@@ -110,7 +110,7 @@ export class HomePage implements OnInit, AfterContentChecked {
     if (data) {
       this.requestGeolocationPermission();
     } else {
-      this.loc = 'Karol Bagh, Delhi';
+      this.loc = 'Tunisia , Ariana';
     }
   }
 

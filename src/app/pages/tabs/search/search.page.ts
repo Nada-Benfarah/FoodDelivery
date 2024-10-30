@@ -60,7 +60,7 @@ export class SearchPage implements OnInit {
         id: '3',
         cover: 'assets/dishes/restaurant.jpg',
         name: 'Stayfit',
-        cuisines: ['Indian', 'Italian', 'Mexican'],
+        cuisines: ['Tunisian', 'Italian', 'Mexican'],
         rating: 5,
         delivery_time: 25,
         distance: 2.5,

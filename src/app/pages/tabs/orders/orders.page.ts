@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
+  orders: any[] = [];
   ngOnInit() {
+    this.orders= JSON.parse(localStorage.getItem('orders') || '[]') ;
   }
-
 }

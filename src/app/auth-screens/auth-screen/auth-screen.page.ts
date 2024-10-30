@@ -5,11 +5,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './auth-screen.page.html',
   styleUrls: ['./auth-screen.page.scss'],
 })
-export class AuthScreenPage implements OnInit {
+export class AuthScreenPage  {
   segmentValue = '1';
   constructor() {}
 
-  ngOnInit() {}
 
   segmentChanged(event: any) {
     console.log(event);

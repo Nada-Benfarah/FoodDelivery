@@ -10,10 +10,15 @@ import { ApiService } from './../../../services/api/api.service';
   styleUrls: ['./items.page.scss'],
 })
 export class ItemsPage implements OnInit {
+  addToCard(id: string) {
+    this.cartItems.push(id);
+    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+  }
   id: any;
   restaurant: any;
   categories: any[] = [];
   items: any[] = [];
+  cartItems: string[] = [];
 
   constructor(
     private navCtrl: NavController,
@@ -24,6 +29,8 @@ export class ItemsPage implements OnInit {
   ngOnInit() {
     this.getId();
     this.getData();
+    const retrievedArray = localStorage.getItem('cart');
+    this.cartItems = retrievedArray ? JSON.parse(retrievedArray) : [];
   }
 
   getId() {

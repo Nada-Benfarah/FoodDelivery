@@ -6,8 +6,8 @@
     <ion-buttons slot="end">
       <ion-button shape="round" color="light" fill="solid">
         <ion-icon slot="icon-only" size="small" name="heart-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    </ion-button>
+      </ion-buttons>
     <ion-title>{{ restaurant?.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -31,7 +31,7 @@
           ><b>{{getCuisines(restaurant?.cuisines)}}</b></ion-text
         >
         <span class="emoji">&#8226;</span>
-        <ion-text color="dark"><b>₹{{restaurant?.price}} for two</b></ion-text>
+        <ion-text color="dark"><b>DT{{restaurant?.price}} for two</b></ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-icon name="time-outline" color="medium"></ion-icon>
@@ -42,6 +42,7 @@
         <ion-icon name="location-outline" color="medium"></ion-icon>
         <ion-text color="dark">{{restaurant?.distance}} kms. away</ion-text>
       </ion-col>
+  
     </ion-row>
   </ion-grid>
 
@@ -50,11 +51,10 @@
       <ion-label>{{category?.name}}</ion-label>
     </ion-list-header>
     <ng-container *ngFor="let item of items">
-      <ion-item *ngIf="category?.id == item?.category_id" lines="full">
         <ion-label>
           <ion-text class="item">{{item?.name}}</ion-text>
           <p class="price">
-            <ion-text color="dark">₹{{item?.price}}</ion-text>
+            <ion-text color="dark">DT{{item?.price}}</ion-text>
           </p>
           <p *ngIf="item?.desc" class="ion-text-wrap ion-text-justify">
             {{item?.desc}}
@@ -63,6 +63,12 @@
         <ion-thumbnail slot="end" *ngIf="item?.cover">
           <ion-img [src]="item?.cover"></ion-img>
         </ion-thumbnail>
+      <ion-item>
+        @if (!cartItems.includes(item.id)) {
+        <ion-buttons slot="end">
+          <ion-button color="warning" (click)="addToCard(item.id)">Add to card</ion-button>
+        </ion-buttons>
+      }
       </ion-item>
     </ng-container>
   </ion-list>
